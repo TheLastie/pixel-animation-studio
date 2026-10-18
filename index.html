@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#191922">
+  <meta name="description" content="Pixel Motion Studio — создавайте пиксельную анимацию покадрово, рисуйте, просматривайте движение и экспортируйте спрайт-лист.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Pixel Motion Studio — анимация вручную">
+  <meta property="og:description" content="Пиксельный редактор с временной шкалой, просмотром движения и экспортом спрайт-листа.">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:image" content="screenshots/pixel-animation-studio.png">
+  <title>Pixel Motion Studio — пиксельная анимация</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23ff6a4f' d='M5 5h8v8H5zm14 0h8v8h-8zM5 19h8v8H5zm14 0h8v8h-8z'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Pixel Motion Studio","applicationCategory":"DesignApplication","operatingSystem":"Any","inLanguage":["ru","en"],"description":"A browser based pixel animation editor with frame timeline, onion skinning, playback, and sprite sheet export."}</script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="./"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>PIXEL<br><b>MOTION</b></span></a>
+      <div class="topbar-center"><span class="session-light"></span> Студия покадровой анимации <span class="top-separator">·</span> <span id="projectLabel">Мотылёк / 24 × 24</span></div>
+      <div class="top-actions"><button class="quiet-button" id="undoButton" type="button" title="Отменить · Ctrl Z">↶ <span>Отменить</span></button><button class="quiet-button" id="redoButton" type="button" title="Повторить · Ctrl Shift Z">↷ <span>Повторить</span></button><button class="export-button" id="exportButton" type="button">Экспорт спрайтов <span>↗</span></button></div>
+    </header>
+
+    <main>
+      <section class="intro-row">
+        <div><p class="eyebrow">Небольшая мастерская движения</p><h1>Каждый пиксель<br><em>помнит жест.</em></h1></div>
+        <p class="intro-copy">Нарисуйте кадры по одному.<br>Оживите их одним нажатием.</p>
+      </section>
+
+      <section class="studio" aria-label="Редактор пиксельной анимации">
+        <aside class="tool-rail" aria-label="Инструменты рисования">
+          <p class="rail-label">Инструменты</p>
+          <button class="tool-button is-active" type="button" data-tool="pencil" aria-label="Карандаш" title="Карандаш (B)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 17 10.8-10.8a2 2 0 0 1 2.8 0l.2.2a2 2 0 0 1 0 2.8L7 21H4zM13 8l3 3M4 21h5"/></svg><span>B</span></button>
+          <button class="tool-button" type="button" data-tool="eraser" aria-label="Ластик" title="Ластик (E)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 14 8-9a2 2 0 0 1 3 0l5 5a2 2 0 0 1 0 3l-7 7H8zM9 9l7 7M14 20h6"/></svg><span>E</span></button>
+          <button class="tool-button" type="button" data-tool="fill" aria-label="Заливка" title="Заливка (G)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 4 9 9-6 6-9-9zM14 7l3-3 4 4-3 3M14 14l6 6M17 20h4"/></svg><span>G</span></button>
+          <button class="tool-button" type="button" data-tool="picker" aria-label="Пипетка" title="Пипетка (I)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5 5 5M4 20l3-1 10-10a2.8 2.8 0 0 0-4-4L3 15zM6 13l5 5"/></svg><span>I</span></button>
+          <div class="rail-rule"></div>
+          <button class="view-toggle is-on" id="gridToggle" type="button" aria-pressed="true"><span class="toggle-icon grid-icon">▦</span><span>Сетка</span></button>
+          <button class="view-toggle is-on" id="onionToggle" type="button" aria-pressed="true"><span class="toggle-icon onion-icon">◉</span><span>Луковица</span></button>
+          <p class="rail-hint">Сочетания<br>клавиш под<br>иконками</p>
+        </aside>
+
+        <section class="canvas-panel" aria-label="Холст">
+          <div class="panel-bar"><div><span class="live-chip"><i></i> Рисование</span><span class="canvas-size">24 × 24 px</span></div><div class="zoom-tools"><button id="zoomOut" type="button" aria-label="Уменьшить">−</button><span id="zoomLabel">800%</span><button id="zoomIn" type="button" aria-label="Увеличить">+</button></div></div>
+          <div class="canvas-stage"><canvas id="drawingCanvas" width="384" height="384" aria-label="Пиксельный холст"></canvas><span class="stage-origin">0, 0</span><span class="stage-size">24 px</span></div>
+          <div class="canvas-caption"><span>Кадр <b id="activeFrameNumber">01</b> <i>/</i> <span id="totalFrames">06</span></span><span>Прозрачный фон</span></div>
+        </section>
+
+        <aside class="right-panel">
+          <section class="preview-section">
+            <div class="side-heading"><div><span class="eyebrow">Проверка движения</span><h2>Просмотр</h2></div><span class="loop-mark">∞</span></div>
+            <div class="preview-stage"><canvas id="previewCanvas" width="192" height="192" aria-label="Анимация целиком"></canvas><span class="preview-label">ПОВТОР</span></div>
+            <div class="playback-controls"><button id="playButton" type="button" aria-label="Воспроизвести">▶</button><label for="fpsInput">Скорость</label><input id="fpsInput" type="range" min="2" max="16" value="8"><output id="fpsOutput">8 к/с</output></div>
+          </section>
+          <section class="palette-section">
+            <div class="side-heading palette-title"><div><span class="eyebrow">Цвета кадра</span><h2>Палитра</h2></div><span id="colorCode">#FF6A4F</span></div>
+            <div class="swatches" role="group" aria-label="Выбрать цвет">
+              <button class="swatch is-selected" type="button" data-color="#ff6a4f" style="--swatch:#ff6a4f" aria-label="Коралловый" aria-pressed="true"></button>
+              <button class="swatch" type="button" data-color="#f5cd65" style="--swatch:#f5cd65" aria-label="Лимонный" aria-pressed="false"></button>
+              <button class="swatch" type="button" data-color="#81d6bf" style="--swatch:#81d6bf" aria-label="Мятный" aria-pressed="false"></button>
+              <button class="swatch" type="button" data-color="#a98bef" style="--swatch:#a98bef" aria-label="Лиловый" aria-pressed="false"></button>
+              <button class="swatch" type="button" data-color="#f4efe5" style="--swatch:#f4efe5" aria-label="Сливочный" aria-pressed="false"></button>
+              <button class="swatch" type="button" data-color="#272731" style="--swatch:#272731" aria-label="Чернильный" aria-pressed="false"></button>
+              <label class="custom-color" title="Свой цвет"><input id="customColor" type="color" value="#ff6a4f" aria-label="Выбрать свой цвет"><span>+</span></label>
+            </div>
+            <div class="current-color"><span class="current-dot" id="currentDot"></span><span>Активный цвет</span><span class="current-hex" id="currentHex">#FF6A4F</span></div>
+          </section>
+        </aside>
+
+        <section class="timeline-panel" aria-label="Временная шкала кадров">
+          <div class="timeline-head"><div><span class="eyebrow">Кадры анимации</span><span class="frame-count" id="frameCount">06 кадров</span></div><div class="timeline-actions"><button id="duplicateButton" type="button" title="Дублировать кадр">＋ Дубль</button><button id="addFrameButton" type="button" class="add-frame">+ Новый кадр</button><button id="deleteFrameButton" type="button" title="Удалить кадр">− Удалить</button></div></div>
+          <div class="frames-strip" id="framesStrip" role="list" aria-label="Кадры, нажмите для редактирования"></div>
+          <div class="timeline-foot"><span>Перетащите кадр, чтобы изменить порядок</span><span><kbd>Пробел</kbd> воспроизведение <i>·</i> <kbd>←</kbd> <kbd>→</kbd> шаг</span></div>
+        </section>
+      </section>
+      <footer class="footer"><span>PIXEL MOTION / Мастерская кадровой анимации</span><span>Нарисовано вручную, пиксель за пикселем.</span><a href="README.md">О проекте ↗</a></footer>
+    </main>
+  </div>
+  <script src="app.js" defer></script>
+</body>
+</html>
