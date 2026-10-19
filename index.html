@@ -4,24 +4,24 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#191922">
-  <meta name="description" content="Pixel Motion Studio — создавайте пиксельную анимацию покадрово, рисуйте, просматривайте движение и экспортируйте спрайт-лист.">
+  <meta name="description" content="Pixel Motion Studio — рисуйте покадровую анимацию, настраивайте холст от 8 до 128 пикселей и скачивайте готовый GIF или PNG-спрайт-лист.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Pixel Motion Studio — анимация вручную">
-  <meta property="og:description" content="Пиксельный редактор с временной шкалой, просмотром движения и экспортом спрайт-листа.">
+  <meta property="og:description" content="Пиксельный редактор с размерами холста от 8 до 128 пикселей и прямым экспортом анимации в GIF.">
   <meta property="og:locale" content="ru_RU">
   <meta property="og:locale:alternate" content="en_US">
   <meta property="og:image" content="screenshots/pixel-animation-studio.png">
   <title>Pixel Motion Studio — пиксельная анимация</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23ff6a4f' d='M5 5h8v8H5zm14 0h8v8h-8zM5 19h8v8H5zm14 0h8v8h-8z'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Pixel Motion Studio","applicationCategory":"DesignApplication","operatingSystem":"Any","inLanguage":["ru","en"],"description":"A browser based pixel animation editor with frame timeline, onion skinning, playback, and sprite sheet export."}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Pixel Motion Studio","applicationCategory":"DesignApplication","operatingSystem":"Any","inLanguage":["ru","en"],"description":"A browser based pixel animation editor with adjustable canvas sizes, frame timeline, playback, animated GIF export, and PNG sprite sheets."}</script>
 </head>
 <body>
   <div class="app-shell">
     <header class="topbar">
       <a class="brand" href="./"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>PIXEL<br><b>MOTION</b></span></a>
       <div class="topbar-center"><span class="session-light"></span> Студия покадровой анимации <span class="top-separator">·</span> <span id="projectLabel">Мотылёк / 24 × 24</span></div>
-      <div class="top-actions"><button class="quiet-button" id="undoButton" type="button" title="Отменить · Ctrl Z">↶ <span>Отменить</span></button><button class="quiet-button" id="redoButton" type="button" title="Повторить · Ctrl Shift Z">↷ <span>Повторить</span></button><button class="export-button" id="exportButton" type="button">Экспорт спрайтов <span>↗</span></button></div>
+      <div class="top-actions"><button class="quiet-button" id="undoButton" type="button" title="Отменить · Ctrl Z">↶ <span>Отменить</span></button><button class="quiet-button" id="redoButton" type="button" title="Повторить · Ctrl Shift Z">↷ <span>Повторить</span></button><button class="sheet-export" id="exportButton" type="button">PNG-лист</button><button class="export-button" id="exportGifButton" type="button">Скачать GIF <span>↗</span></button></div>
     </header>
 
     <main>
@@ -44,7 +44,7 @@
         </aside>
 
         <section class="canvas-panel" aria-label="Холст">
-          <div class="panel-bar"><div><span class="live-chip"><i></i> Рисование</span><span class="canvas-size">24 × 24 px</span></div><div class="zoom-tools"><button id="zoomOut" type="button" aria-label="Уменьшить">−</button><span id="zoomLabel">800%</span><button id="zoomIn" type="button" aria-label="Увеличить">+</button></div></div>
+          <div class="panel-bar"><div class="canvas-settings"><span class="live-chip"><i></i> Рисование</span><label for="canvasSize">Размер</label><select id="canvasSize" aria-label="Размер холста"><option value="8">8 × 8</option><option value="16">16 × 16</option><option value="24" selected>24 × 24</option><option value="32">32 × 32</option><option value="48">48 × 48</option><option value="64">64 × 64</option><option value="96">96 × 96</option><option value="128">128 × 128</option></select><span class="canvas-size">24 × 24 px</span></div><div class="zoom-tools"><button id="zoomOut" type="button" aria-label="Уменьшить">−</button><span id="zoomLabel">800%</span><button id="zoomIn" type="button" aria-label="Увеличить">+</button></div></div>
           <div class="canvas-stage"><canvas id="drawingCanvas" width="384" height="384" aria-label="Пиксельный холст"></canvas><span class="stage-origin">0, 0</span><span class="stage-size">24 px</span></div>
           <div class="canvas-caption"><span>Кадр <b id="activeFrameNumber">01</b> <i>/</i> <span id="totalFrames">06</span></span><span>Прозрачный фон</span></div>
         </section>
@@ -54,6 +54,7 @@
             <div class="side-heading"><div><span class="eyebrow">Проверка движения</span><h2>Просмотр</h2></div><span class="loop-mark">∞</span></div>
             <div class="preview-stage"><canvas id="previewCanvas" width="192" height="192" aria-label="Анимация целиком"></canvas><span class="preview-label">ПОВТОР</span></div>
             <div class="playback-controls"><button id="playButton" type="button" aria-label="Воспроизвести">▶</button><label for="fpsInput">Скорость</label><input id="fpsInput" type="range" min="2" max="16" value="8"><output id="fpsOutput">8 к/с</output></div>
+            <output class="export-status" id="exportStatus" aria-live="polite"></output>
           </section>
           <section class="palette-section">
             <div class="side-heading palette-title"><div><span class="eyebrow">Цвета кадра</span><h2>Палитра</h2></div><span id="colorCode">#FF6A4F</span></div>

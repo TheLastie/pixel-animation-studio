@@ -10,13 +10,13 @@ Pixel Motion Studio — редактор покадровой пиксельно
 
 ### Возможности
 
-- Холст 24 × 24 пикселя: карандаш, ластик, заливка и пипетка.
+- Холст от 8 × 8 до 128 × 128 пикселей: карандаш, ластик, заливка и пипетка. При расширении рисунок остаётся по центру; уменьшение аккуратно подгоняет его под новый холст.
 - Луковичная калька показывает предыдущий кадр при рисовании следующего.
 - Кадры можно добавлять, дублировать, удалять и менять местами перетаскиванием.
 - Просмотр анимации с частотой от 2 до 16 кадров в секунду.
 - Сетка пикселей, масштаб холста, готовая палитра и выбор своего цвета.
-- Отмена и возврат действия, сочетания клавиш и экспорт прозрачного спрайт-листа в PNG.
-- Работает в браузере без установки библиотек.
+- Отмена и возврат действия, сочетания клавиш, PNG-спрайт-лист и анимированный GIF с прозрачным фоном и выбранной скоростью.
+- GIF кодируется прямо в браузере, без загрузки кадров на сервер и без сторонней библиотеки.
 
 ### Запуск
 
@@ -28,13 +28,13 @@ Pixel Motion Studio is a browser-based, frame-by-frame pixel animation editor. I
 
 ### Features
 
-- A 24 × 24 pixel canvas with pencil, eraser, flood fill, and eyedropper tools.
+- Canvas sizes from 8 × 8 to 128 × 128 pixels, with pencil, eraser, flood fill, and eyedropper tools. Expanding keeps the sprite centered; shrinking fits it to the new canvas.
 - Onion skinning shows the previous frame while drawing the next one.
 - Add, duplicate, delete, and drag frames to reorder them.
 - Preview the animation at 2–16 frames per second.
 - Pixel grid, canvas zoom, a ready-made palette, and a custom color picker.
-- Undo and redo, keyboard shortcuts, and transparent PNG sprite-sheet export.
-- Runs in the browser without installing libraries.
+- Undo and redo, keyboard shortcuts, PNG sprite-sheet export, and animated GIF export with transparency and the selected playback speed.
+- GIFs are encoded locally in the browser; frames are never uploaded and no third-party library is required.
 
 ### Run
 
