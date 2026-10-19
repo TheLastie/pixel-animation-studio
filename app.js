@@ -132,6 +132,11 @@
     const side = Math.max(24, Math.min(preferred, stage.clientWidth - 30, stage.clientHeight - 24));
     canvas.style.width = `${Math.floor(side)}px`; canvas.style.height = `${Math.floor(side)}px`;
   }
+  let fitFrame = 0;
+  function fitCanvasToStage() {
+    cancelAnimationFrame(fitFrame);
+    fitFrame = requestAnimationFrame(() => setZoom(zoom));
+  }
   function toggle(button, key) { if (key === 'gridOn') gridOn = !gridOn; else onionOn = !onionOn; button.classList.toggle('is-on', key === 'gridOn' ? gridOn : onionOn); button.setAttribute('aria-pressed', String(key === 'gridOn' ? gridOn : onionOn)); drawActive(); }
   function togglePlayback() {
     playing = !playing; $('playButton').textContent = playing ? 'Ⅱ' : '▶'; $('playButton').setAttribute('aria-label', playing ? 'Остановить' : 'Воспроизвести');
@@ -236,7 +241,9 @@
   $('zoomOut').addEventListener('click', () => setZoom(zoom - 100)); $('zoomIn').addEventListener('click', () => setZoom(zoom + 100));
   $('playButton').addEventListener('click', togglePlayback); $('fpsInput').addEventListener('input', event => setSpeed(event.target.value)); $('exportButton').addEventListener('click', exportSheet); $('exportGifButton').addEventListener('click', exportGif);
   $('canvasSize').addEventListener('change', event => setCanvasSize(event.target.value));
-  window.addEventListener('resize', () => setZoom(zoom));
+  window.addEventListener('resize', fitCanvasToStage, { passive: true });
+  const stageObserver = new ResizeObserver(fitCanvasToStage);
+  stageObserver.observe(canvas.parentElement);
   document.addEventListener('keydown', event => {
     if (event.target.matches('input')) return;
     if (event.code === 'Space') { event.preventDefault(); togglePlayback(); }
