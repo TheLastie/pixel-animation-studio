@@ -150,6 +150,24 @@
     frames.forEach((frame, fi) => frame.forEach((c, i) => { if (c) { out.fillStyle = c; out.fillRect(fi * SIZE + i % SIZE, Math.floor(i / SIZE), 1, 1); } }));
     sheet.toBlob(blob => { if (!blob) return setExportStatus('Не удалось создать PNG. Попробуйте ещё раз.', true); download(blob, `pixel-motion-${SIZE}x${SIZE}-${frames.length}-frames.png`); });
   }
+  function exportManifest() {
+    const image = `pixel-motion-${SIZE}x${SIZE}-${frames.length}-frames.png`;
+    const manifest = {
+      format: 'pixel-motion-sprite-manifest', version: 1,
+      animation: document.querySelector('#projectLabel').textContent.split(' / ')[0].trim(),
+      canvas: { width: SIZE, height: SIZE },
+      atlas: { image, width: SIZE * frames.length, height: SIZE, layout: 'horizontal-strip', transparent: true },
+      playback: { fps, frameDurationMs: Math.round(1000 / fps), loop: true },
+      origin: { x: SIZE / 2, y: SIZE / 2 },
+      frames: frames.map((_, index) => ({
+        name: `frame_${String(index).padStart(2, '0')}`,
+        x: index * SIZE, y: 0, width: SIZE, height: SIZE,
+        durationMs: Math.round(1000 / fps)
+      }))
+    };
+    download(new Blob([JSON.stringify(manifest, null, 2)], { type: 'application/json' }), `pixel-motion-${SIZE}x${SIZE}-${frames.length}-frames.json`);
+    setExportStatus(`JSON готов · ${frames.length} кадров · ${fps} к/с · сохраните рядом с PNG-листом`);
+  }
   function download(blob, filename) {
     const url = URL.createObjectURL(blob), link = document.createElement('a');
     link.href = url; link.download = filename; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1500);
@@ -239,7 +257,7 @@
   $('addFrameButton').addEventListener('click', () => addFrame(false)); $('duplicateButton').addEventListener('click', () => addFrame(true)); $('deleteFrameButton').addEventListener('click', deleteFrame);
   $('undoButton').addEventListener('click', () => restore(undoStack, redoStack)); $('redoButton').addEventListener('click', () => restore(redoStack, undoStack));
   $('zoomOut').addEventListener('click', () => setZoom(zoom - 100)); $('zoomIn').addEventListener('click', () => setZoom(zoom + 100));
-  $('playButton').addEventListener('click', togglePlayback); $('fpsInput').addEventListener('input', event => setSpeed(event.target.value)); $('exportButton').addEventListener('click', exportSheet); $('exportGifButton').addEventListener('click', exportGif);
+  $('playButton').addEventListener('click', togglePlayback); $('fpsInput').addEventListener('input', event => setSpeed(event.target.value)); $('exportButton').addEventListener('click', exportSheet); $('exportMetaButton').addEventListener('click', exportManifest); $('exportGifButton').addEventListener('click', exportGif);
   $('canvasSize').addEventListener('change', event => setCanvasSize(event.target.value));
   window.addEventListener('resize', fitCanvasToStage, { passive: true });
   const stageObserver = new ResizeObserver(fitCanvasToStage);
