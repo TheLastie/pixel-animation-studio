@@ -15,7 +15,7 @@ Pixel Motion Studio — редактор покадровой пиксельно
 - Кадры можно добавлять, дублировать, удалять и менять местами перетаскиванием.
 - Просмотр анимации с частотой от 2 до 16 кадров в секунду.
 - Сетка пикселей, масштаб холста, готовая палитра и выбор своего цвета.
-- Отмена и возврат действия, сочетания клавиш, PNG-спрайт-лист и анимированный GIF с прозрачным фоном и выбранной скоростью.
+- Отмена и возврат действия, сочетания клавиш, PNG-спрайт-лист, парный JSON-манифест с координатами кадров, таймингом, циклом и точкой опоры, а также GIF с прозрачностью и выбранной частотой.
 - GIF кодируется прямо в браузере, без загрузки кадров на сервер и без сторонней библиотеки.
 
 ### Запуск
@@ -33,7 +33,7 @@ Pixel Motion Studio is a browser-based, frame-by-frame pixel animation editor. I
 - Add, duplicate, delete, and drag frames to reorder them.
 - Preview the animation at 2–16 frames per second.
 - Pixel grid, canvas zoom, a ready-made palette, and a custom color picker.
-- Undo and redo, keyboard shortcuts, PNG sprite-sheet export, and animated GIF export with transparency and the selected playback speed.
+- Undo and redo, keyboard shortcuts, PNG sprite-sheet export, a matching JSON frame manifest with atlas rectangles, timing, loop and origin, and animated GIF export with transparency and the selected playback speed.
 - GIFs are encoded locally in the browser; frames are never uploaded and no third-party library is required.
 
 ### Run
