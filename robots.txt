@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://thelastie.github.io/pixel-animation-studio/sitemap.xml
